@@ -61,12 +61,7 @@ public class AdminController {
     public String updateUser(@ModelAttribute("user") @Valid User user,
                              @RequestParam(required = false) String roleAdmin,
                              @RequestParam(required = false) String roleUser,
-                             BindingResult bindingResult,
                              @PathVariable("id") Long id) {
-
-        if (bindingResult.hasErrors()) {
-            return "edit";
-        }
         userService.updateUser(user, id, roleUser, roleAdmin);
         return "redirect:/admin";
     }
