@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>данные пользователя</title>
+    <title>список</title>
     <style>
         .center {
           margin-left: auto;
@@ -25,7 +25,11 @@
 </head>
 <body>
 
-<h2 class="centered">Сведения о пользователе</h2>
+<h2 class="centered">Пользователи</h2>
+<div class="centered">
+    <input type="button" value="Добавить пользователя" onclick="window.location.href = 'admin/new'">
+</div>
+<br>
 
 <div>
     <table class="center">
@@ -37,8 +41,10 @@
             <th>Фамилия</th>
             <th>Email</th>
             <th>Роли</th>
+            <th>Обновить данные</th>
+            <th>Удалить пользователя</th>
         </tr>
-        <tr>
+        <tr th:each="user : ${users}">
             <td th:utext="${user.getId()}"></td>
             <td th:utext="${user.getUsername()}"></td>
             <td th:utext="${user.getAge()}"></td>
@@ -46,17 +52,19 @@
             <td th:utext="${user.getSurname()}"></td>
             <td th:utext="${user.getEmail()}"></td>
             <td th:utext="${user.roleToString()}"></td>
+            <td>
+                <form th:action="@{/admin/{id}/edit(id=${user.getId()})}">
+                    <input type="submit" value="Обновить"/>
+                </form>
+            </td>
+            <td>
+                <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}">
+                    <input type="submit" value="Удалить"/>
+                </form>
+            </td>
         </tr>
     </table>
 </div>
-
-<br/>
-
-<div class="centered" sec:authorize="hasRole('ROLE_ADMIN')">
-    <a href="/admin">Открыть список пользователей</a>
-</div>
-<br/>
-
 <hr>
 <br/>
 
@@ -66,5 +74,9 @@
     </a>
 </div>
 
+<br/>
+<div class="centered">
+    <a href="/user">Показать страницу с моими данными</a>
+</div>
 </body>
 </html>
