@@ -1,73 +1,53 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
-import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
     private final UserService userService;
-    private final UserValidator userValidator;
+    private final RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService, UserValidator userValidator) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
-        this.userValidator = userValidator;
+        this.roleService = roleService;
     }
 
-    @GetMapping()
-    public String listAllUsers(Model model) {
+    @GetMapping
+    public String listAllUsers(Principal principal, Model model) {
+        model.addAttribute("roles", roleService.getAllRoles());
+        model.addAttribute("newUser", new User());
+        model.addAttribute("authUser", userService.getUserByName(principal.getName()));
         model.addAttribute("users", userService.getAllUsers());
         return "list";
     }
 
-    @GetMapping("/new")
-    public String newUser(@ModelAttribute("user") User user) {
-        return "new";
-    }
-
-    @PostMapping()
-    public String createUser(@ModelAttribute("user") @Valid User user,
-                             @RequestParam(required = false) String roleAdmin,
-                             @RequestParam(required = false) String roleUser,
-                             BindingResult bindingResult) {
-
-        userValidator.validate(user, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            return "new";
-        }
-        userService.saveUser(user, roleUser, roleAdmin);
+    @PostMapping
+    public String createUser(@ModelAttribute("newUser") @Valid User user) {
+        userService.saveUser(user);
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
-    public String editUser(Model model, @PathVariable("id") Long id) {
-        userService.getModelRoles(id, model);
-        model.addAttribute("user", userService.getUserById(id));
-        return "edit";
-    }
-
-    @PostMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") @Valid User user,
-                             @RequestParam(required = false) String roleAdmin,
-                             @RequestParam(required = false) String roleUser,
-                             @PathVariable("id") Long id) {
-        userService.updateUser(user, id, roleUser, roleAdmin);
+    @PatchMapping("/user/{id}")
+    public String updateUser(@ModelAttribute("user") @Valid User user, @PathVariable("id") long id) {
+        userService.updateUser(id, user);
         return "redirect:/admin";
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable("id") Long id) {
+    public String deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
     }

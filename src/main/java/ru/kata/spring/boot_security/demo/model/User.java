@@ -30,7 +30,6 @@ public class User implements UserDetails {
     private String surname;
 
     @Column(name = "age")
-    @NotNull(message = "Поле \'Возраст\' не должно быть пустым")
     @Min(value = 1, message = "Возраст должен быть больше нуля")
     private Byte age;
 
@@ -40,7 +39,6 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "password")
-    @NotEmpty
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -60,6 +58,7 @@ public class User implements UserDetails {
         this.surname = surname;
         this.email = email;
         this.password = password;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -156,6 +155,7 @@ public class User implements UserDetails {
     public String roleToString() {
         return roles.stream()
                 .map(Role::getNameOnly)
+                .sorted((element1, element2) -> element1.compareTo(element2))
                 .reduce((x, y) -> x +", " + y)
                 .orElse("");
     }

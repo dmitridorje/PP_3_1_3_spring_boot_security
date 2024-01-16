@@ -5,12 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import ru.kata.spring.boot_security.demo.model.User;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.security.Principal;
-
 @Controller
+@RequestMapping("/user")
 public class UsersController {
 
     private final UserService userService;
@@ -20,10 +19,9 @@ public class UsersController {
         this.userService = userService;
     }
 
-    @GetMapping("/user")
-    public String getUser(Model model, Principal principal) {
-        User user = userService.getUserByName(principal.getName());
-        model.addAttribute("user", user);
+    @GetMapping()
+    public String show(Model model) {
+        model.addAttribute("user", userService.getUserFromModel(model));
         return "user";
     }
 }
