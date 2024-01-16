@@ -90,6 +90,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(initialUser);
     }
 
+    @Override
     public void getModelRoles(Long id, Model model) {
         Set<Role> roles = getUserById(id).getRoles();
         for (Role role : roles) {
