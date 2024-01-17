@@ -11,10 +11,9 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
-    @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
