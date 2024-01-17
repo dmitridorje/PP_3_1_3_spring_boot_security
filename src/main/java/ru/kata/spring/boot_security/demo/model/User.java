@@ -1,15 +1,14 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name="users")
 public class User implements UserDetails {
 
     @Id
@@ -17,8 +16,8 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "username", unique = true)
-    @NotEmpty(message = "Поле \'Никнейм\' не должно быть пустым")
-    @Size(min = 4, max = 30, message = "Поле \'Имя пользователя\' должно содержать от 4 до 32 символов")
+    @NotEmpty(message = "Поле \'Имя пользователя\' не должно быть пустым")
+    @Size(min = 4, max = 32, message = "Поле \'Имя пользователя\' должно содержать от 4 до 32 символов")
     private String username;
 
     @Column(name = "name")
@@ -30,7 +29,6 @@ public class User implements UserDetails {
     private String surname;
 
     @Column(name = "age")
-    @NotNull(message = "Поле \'Возраст\' не должно быть пустым")
     @Min(value = 1, message = "Возраст должен быть больше нуля")
     private Byte age;
 
@@ -39,8 +37,8 @@ public class User implements UserDetails {
     @Email(message = "В поле \'Email\' должен быть введён действительный электронный адрес")
     private String email;
 
-    @Column(name = "password")
-    @NotEmpty
+    @Column
+    @NotNull
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -53,7 +51,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, byte age, String name, String surname, String email, String password) {
+    public User(String username, Byte age, String name, String surname, String email, String password) {
         this.username = username;
         this.age = age;
         this.name = name;
@@ -64,10 +62,6 @@ public class User implements UserDetails {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override
@@ -95,8 +89,18 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setUsername(String name) {
-        this.username = name;
+    @Override
+    public Set<Role> getAuthorities() {
+        return getRoles();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     public Byte getAge() {
@@ -123,54 +127,27 @@ public class User implements UserDetails {
         this.surname = surname;
     }
 
-    public String getEmail() {
-        return email;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
-    public String roleToString() {
-        return roles.stream()
-                .map(Role::getNameOnly)
-                .reduce((x, y) -> x +", " + y)
-                .orElse("");
+    public String getEmail() {
+        return email;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", age=" + age +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", roles=" + roles +
-                '}';
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -13,7 +13,7 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(unique = true)
     private String name;
 
     @Transient
@@ -23,28 +23,24 @@ public class Role implements GrantedAuthority {
     public Role() {
     }
 
-    public Role(String name) {
-        this.name = name;
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Set<User> getUsers() {
         return users;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setUsers(Set<User> users) {
@@ -53,15 +49,11 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return this.name;
-    }
-
-    public String getNameOnly() {
-        return name.replace("ROLE_", "");
+        return getName();
     }
 
     @Override
     public String toString() {
-        return this.name;
+        return name;
     }
 }

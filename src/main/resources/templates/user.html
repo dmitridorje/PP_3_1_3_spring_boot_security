@@ -1,70 +1,75 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      style="height: 100%">
 <head>
     <meta charset="UTF-8">
-    <title>данные пользователя</title>
-    <style>
-        .center {
-          margin-left: auto;
-          margin-right: auto;
-        }
-        .centered {
-          text-align: center;
-        }
-        table, th, td {
-          border: 1px solid black;
-          border-collapse: collapse;
-        }
-        th, td {
-          padding: 5px;
-        }
-        th {
-          text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>User page</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 </head>
-<body>
+<body style="background-color: #f8f9fa ; height: 100%">
+<nav style="color: white" class="navbar navbar-dark bg-dark">
+    <span id="user_roles"></span>
+    <form class="form-inline">
+        <a style="color: gray" class="navbar-brand" href='/logout'>Logout</a>
+    </form>
+</nav>
 
-<h2 class="centered">Сведения о пользователе</h2>
-
-<div>
-    <table class="center">
-        <tr>
-            <th>Id</th>
-            <th>Ник</th>
-            <th>Возраст</th>
-            <th>Имя</th>
-            <th>Фамилия</th>
-            <th>Email</th>
-            <th>Роли</th>
-        </tr>
-        <tr>
-            <td th:utext="${user.getId()}"></td>
-            <td th:utext="${user.getUsername()}"></td>
-            <td th:utext="${user.getAge()}"></td>
-            <td th:utext="${user.getName()}"></td>
-            <td th:utext="${user.getSurname()}"></td>
-            <td th:utext="${user.getEmail()}"></td>
-            <td th:utext="${user.roleToString()}"></td>
-        </tr>
-    </table>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2" style="padding-left: 0px; padding-right: 0px">
+            <div class="container-fluid" style="padding-left: 0px; padding-right: 0px">
+                <ul id="selector" class="nav nav-pills flex-column">
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <h2>
+                <strong>User information-page</strong>
+            </h2>
+            <div class="container-fluid">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="usersTable">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5><strong>About user</strong></h5>
+                            </div>
+                            <div class="panel-body">
+                                <hr style="margin-top: 0; margin-bottom: 0"/>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Age</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Roles</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="fillMyTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<br/>
-
-<div class="centered" sec:authorize="hasRole('ROLE_ADMIN')">
-    <a href="/admin">Открыть список пользователей</a>
-</div>
-<br/>
-
-<hr>
-<br/>
-
-<div class="centered">
-    <a th:href="@{/logout}">
-        <input type="button" value="Logout"/>
-    </a>
-</div>
-
+<script type="text/javascript" src="/myScriptUser.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>
